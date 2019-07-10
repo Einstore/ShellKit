@@ -10,7 +10,7 @@ Access local shell as well as remote over SSH for Swift NIO applications
 
 ### Usage
 
-#### Connec to a local terminal
+#### Connect to a local terminal
 
 ```swift
 let shell = try Shell(.local, on: eventLoop)
