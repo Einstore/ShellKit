@@ -1,0 +1,52 @@
+{
+  "object": {
+    "pins": [
+      {
+        "package": "Socket",
+        "repositoryURL": "https://github.com/IBM-Swift/BlueSocket",
+        "state": {
+          "branch": null,
+          "revision": "26c8f4e4e3000421a0c97aaf0c7b5e9aa5475222",
+          "version": "0.12.94"
+        }
+      },
+      {
+        "package": "CSSH",
+        "repositoryURL": "https://github.com/jakeheis/CSSH",
+        "state": {
+          "branch": null,
+          "revision": "579a20508ab598f78713a60fed95706efd06bbcb",
+          "version": "1.0.3"
+        }
+      },
+      {
+        "package": "Shout",
+        "repositoryURL": "https://github.com/jakeheis/Shout.git",
+        "state": {
+          "branch": null,
+          "revision": "b2cccccf481f141414dafd200385cf50d8adc0cd",
+          "version": "0.5.0"
+        }
+      },
+      {
+        "package": "swift-nio",
+        "repositoryURL": "https://github.com/apple/swift-nio.git",
+        "state": {
+          "branch": null,
+          "revision": "7f20464df31e85f86bedf4a8afdd1785e0cb5059",
+          "version": "2.3.0"
+        }
+      },
+      {
+        "package": "SwiftShell",
+        "repositoryURL": "https://github.com/kareman/SwiftShell.git",
+        "state": {
+          "branch": null,
+          "revision": "2614f86520e66e19328f11b00dabd474209e82f7",
+          "version": "5.0.0"
+        }
+      }
+    ]
+  },
+  "version": 1
+}
