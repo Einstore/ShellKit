@@ -23,6 +23,18 @@ extension Cmd {
         return shell.cd(path: path)
     }
     
+    /// Return a command path if exists
+    /// - Parameter command: Command
+    public func which(_ command: String) -> EventLoopFuture<String> {
+        return shell.run(bash: "which \(command)").trimMap()
+    }
+    
+    /// Check is command exists
+    /// - Parameter command: Command
+    public func exists(command: String) -> EventLoopFuture<Bool> {
+        return shell.cmd.which(command).map { !$0.isEmpty }.recover { _ in false }
+    }
+    
     /// Return content of a file as a string
     /// - Parameter path: Path to file
     public func cat(path: String) -> EventLoopFuture<String> {
