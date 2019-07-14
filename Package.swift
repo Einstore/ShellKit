@@ -7,7 +7,8 @@ let package = Package(
         .macOS(.v10_13)
     ],
     products: [
-        .library(name: "ShellKit", targets: ["ShellKit"])
+        .library(name: "ShellKit", targets: ["ShellKit"]),
+        .library(name: "CommandKit", targets: ["CommandKit"])
     ],
     dependencies: [
         .package(url: "https://github.com/apple/swift-nio.git", from: "2.3.0"),
@@ -21,6 +22,12 @@ let package = Package(
                 "Shout",
                 "SwiftShell",
                 "NIO"
+            ]
+        ),
+        .target(
+            name: "CommandKit",
+            dependencies: [
+                "ShellKit"
             ]
         )
     ]

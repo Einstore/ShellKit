@@ -12,17 +12,13 @@ import NIO
 /// Main executor
 public class Shell: Executor {
     
+    /// Basic error
     public enum Error: Swift.Error {
+        
+        /// Bad exit code error
         case badExitCode(command: String, exit: Int32, output: String)
+        
     }
-    
-    /// Default directory path
-    public static var DefaultDir = "/"
-    
-    public var outputCommands: Bool = true
-    
-    /// Default output
-    public var output: ((String) -> ())? = nil
     
     /// Connection type
     public struct Connection {
@@ -75,6 +71,18 @@ public class Shell: Executor {
         
     }
     
+    /// Default directory path
+    public static var DefaultDir = "/"
+    
+    /// Output commands into ... output
+    public var outputCommands: Bool = true
+    
+    /// Default output
+    public var output: ((String) -> ())? = nil
+    
+    /// Event loop
+    public let eventLoop: EventLoop
+    
     /// Current executor
     public let executor: Executor
     
@@ -82,6 +90,7 @@ public class Shell: Executor {
     /// - Parameter connection: Connection details
     /// - Parameter eventLoop: Event loop
     public init(_ connection: Connection, on eventLoop: EventLoop) throws {
+        self.eventLoop = eventLoop
         switch connection.storage {
         case .local(dir: let dir):
             executor = try LocalExecutor(workDir: dir, on: eventLoop)
@@ -104,6 +113,10 @@ public class Shell: Executor {
         }
     }
     
+    /// Run command
+    /// - Parameter command: Command
+    /// - Parameter args: Arguments
+    /// - Parameter output: Closure to output console text
     public func run(command: String, args: [String], output: ((String) -> ())? = nil) -> EventLoopFuture<String> {
         if outputCommands {
             output?("$ \(command) \(args.joined(separator: " "))\n")
@@ -113,6 +126,18 @@ public class Shell: Executor {
             output?(text)
             self.output?(text)
         }
+    }
+    
+    /// Check if file exists
+    /// - Parameter path: Path to the file
+    public func exists(path: String) ->EventLoopFuture<Bool> {
+        return executor.exists(path: path)
+    }
+    
+    /// Set current working directory
+    /// - Parameter path: Path
+    public func cd(path: String) -> EventLoopFuture<Void> {
+        return executor.cd(path: path)
     }
     
 }

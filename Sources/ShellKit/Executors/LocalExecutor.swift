@@ -19,8 +19,7 @@ public class LocalExecutor: Executor {
     }
     
     let eventLoop: EventLoop
-    let context: CustomContext
-    
+    var context: CustomContext
     
     /// Initializer
     /// - Parameter dir: Current working directory, defaults to `~/`
@@ -32,10 +31,10 @@ public class LocalExecutor: Executor {
         if !FileManager.default.fileExists(atPath: dir) {
             throw Error.pathDoesNotExist(dir)
         }
+        
         self.eventLoop = eventLoop
-        var context = CustomContext(main)
+        self.context = CustomContext(main)
         context.currentdirectory = dir
-        self.context = context
     }
     
     /// Run bash command
@@ -58,21 +57,27 @@ public class LocalExecutor: Executor {
             }
             out.onCompletion { cmd in
                 let exit = Int32(cmd.exitcode())
-                #warning("Append stdout to already outputed text in outputText to get the whole message!")
                 let stdout = cmd.stdout.read()
-                if outputText == nil && !stdout.isEmpty {
-                    output?(stdout)
+                let ret: String
+                if let outputText = outputText {
+                    ret = outputText + stdout
+                } else {
+                    ret = stdout
                 }
                 if exit == 0 {
-                    promise.succeed(outputText ?? stdout)
+                    promise.succeed(ret)
                 } else {
-                    promise.fail(Shell.Error.badExitCode(command: command, exit: exit, output: outputText ?? ""))
+                    promise.fail(Shell.Error.badExitCode(command: command, exit: exit, output: ret))
                 }
             }
         }
         return promise.futureResult
     }
     
+    /// Run command
+    /// - Parameter command: Command
+    /// - Parameter args: Arguments
+    /// - Parameter output: Closure to output console text
     public func run(command: String, args: [String], output: ((String) -> ())? = nil) -> EventLoopFuture<String> {
         let promise = eventLoop.makePromise(of: Output.self)
         DispatchQueue.global(qos: .background).async {
@@ -104,9 +109,26 @@ public class LocalExecutor: Executor {
         return promise.futureResult
     }
     
+    /// Check if file exists
+    /// - Parameter path: Path to the file
     public func exists(path: String) -> EventLoopFuture<Bool> {
         let exists = FileManager.default.fileExists(atPath: path)
         return eventLoop.makeSucceededFuture(exists)
+    }
+    
+    /// Set current working directory
+    /// - Parameter path: Path
+    public func cd(path dir: String) -> EventLoopFuture<Void> {
+        if let first = dir.first, first == "~" {
+            return eventLoop.makeFailedFuture(Error.useAbsolutePath(dir))
+        }
+        if !FileManager.default.fileExists(atPath: dir) {
+            return eventLoop.makeFailedFuture(Error.pathDoesNotExist(dir))
+        }
+        
+        context.currentdirectory = dir
+        
+        return eventLoop.makeSucceededFuture(Void())
     }
     
 }

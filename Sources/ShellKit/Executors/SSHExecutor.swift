@@ -56,6 +56,10 @@ public class SSHExecutor: Executor {
         return promise.futureResult
     }
     
+    /// Run command
+    /// - Parameter command: Command
+    /// - Parameter args: Arguments
+    /// - Parameter output: Closure to output console text
     public func run(command: String, args: [String], output: ((String) -> ())? = nil) -> EventLoopFuture<String> {
         let cmd = command + ((args.count > 0) ? (" " + args.joined(separator: " ")) : "")
         return run(bash: cmd, output: output)
@@ -75,6 +79,12 @@ public class SSHExecutor: Executor {
         return run(bash: command).map { result in
             return result.contains("\(path) exists")
         }
+    }
+    
+    /// Set current working directory
+    /// - Parameter path: Path
+    public func cd(path: String) -> EventLoopFuture<Void> {
+        return run(bash: "cd \(path.quoteEscape)").void()
     }
     
 }
