@@ -52,6 +52,19 @@ let out: String = try futureResponse.wait()
 print(out)
 ```
 
+### Using `CommandKit`
+
+Access commands through
+
+**Example:**
+```swift
+shell.cmd.pwd().map { currentPath in
+   print(currentPath)
+}
+```
+
+> Discover more commands under `shell.cmd` and `shell.cmd.install`
+
 ### Author
 
 Ondrej Rafaj @rafiki270
