@@ -90,19 +90,27 @@ public class LocalExecutor: Executor {
                     } else {
                         outputText = text
                     }
-                    output(text)
+                    self.eventLoop.execute {
+                        output(text)
+                    }
                 }
             }
             out.onCompletion { cmd in
                 let exit = Int32(cmd.exitcode())
                 let stdout = cmd.stdout.read()
                 if outputText == nil && !stdout.isEmpty {
-                    output?(stdout)
+                    self.eventLoop.execute {
+                        output?(stdout)
+                    }
                 }
                 if exit == 0 {
-                    promise.succeed(outputText ?? stdout)
+                    self.eventLoop.execute {
+                        promise.succeed(outputText ?? stdout)
+                    }
                 } else {
-                    promise.fail(Shell.Error.badExitCode(command: command, exit: exit, output: outputText ?? ""))
+                    self.eventLoop.execute {
+                        promise.fail(Shell.Error.badExitCode(command: command, exit: exit, output: outputText ?? ""))
+                    }
                 }
             }
         }
@@ -149,9 +157,13 @@ public class LocalExecutor: Executor {
         DispatchQueue.global(qos: .background).async {
             do {
                 try data.write(to: URL(fileURLWithPath: path))
-                promise.succeed(Void())
+                self.eventLoop.execute {
+                    promise.succeed(Void())
+                }
             } catch {
-                promise.fail(error)
+                self.eventLoop.execute {
+                    promise.fail(error)
+                }
             }
         }
         return promise.futureResult

@@ -42,15 +42,23 @@ public class SSHExecutor: Executor {
                 var outputText = ""
                 let res = try self.ssh.execute("cd \(self.workDir) ; \(bash)") { text in
                     outputText += text
-                    output?(text)
+                    self.eventLoop.execute {
+                        output?(text)
+                    }
                 }
                 if res == 0 {
-                    promise.succeed(outputText)
+                    self.eventLoop.execute {
+                        promise.succeed(outputText)
+                    }
                 } else {
-                    promise.fail(Shell.Error.badExitCode(command: bash, exit: res, output: outputText))
+                    self.eventLoop.execute {
+                        promise.fail(Shell.Error.badExitCode(command: bash, exit: res, output: outputText))
+                    }
                 }
             } catch {
-                promise.fail(error)
+                self.eventLoop.execute {
+                    promise.fail(error)
+                }
             }
         }
         return promise.futureResult
@@ -104,11 +112,17 @@ public class SSHExecutor: Executor {
         let promise = eventLoop.makePromise(of: Void.self)
         DispatchQueue.global(qos: .background).async {
             do {
-                let sftp = try self.ssh.openSftp()
-                try sftp.upload(data: data, remotePath: path)
-                promise.succeed(Void())
+                try autoreleasepool {
+                    let sftp: SFTP? = try self.ssh.openSftp()
+                    try sftp?.upload(data: data, remotePath: path)
+                }
+                self.eventLoop.execute {
+                    promise.succeed(Void())
+                }
             } catch {
-                promise.fail(error)
+                self.eventLoop.execute {
+                    promise.fail(error)
+                }
             }
         }
         return promise.futureResult
