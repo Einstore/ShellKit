@@ -147,7 +147,7 @@ public class Shell: Executor {
     /// - Parameter string: Path to a local file
     /// - Parameter to: Destination path (including filename)
     public func upload(string: String, to path: String) -> EventLoopFuture<Void> {
-        return executor.upload(file: string, to: path)
+        return executor.upload(string: string, to: path)
     }
     
     /// Upload data as a file
