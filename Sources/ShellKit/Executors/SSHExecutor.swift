@@ -15,6 +15,7 @@ public class SSHExecutor: Executor {
     
     let eventLoop: EventLoop
     let ssh: SSH
+    var sftp: SFTP?
     
     let workDir: String
     
@@ -112,10 +113,10 @@ public class SSHExecutor: Executor {
         let promise = eventLoop.makePromise(of: Void.self)
         DispatchQueue.global(qos: .background).async {
             do {
-                try autoreleasepool {
-                    let sftp: SFTP? = try self.ssh.openSftp()
-                    try sftp?.upload(data: data, remotePath: path)
+                if self.sftp == nil {
+                    self.sftp = try self.ssh.openSftp()
                 }
+                try self.sftp?.upload(data: data, remotePath: path)
                 self.eventLoop.execute {
                     promise.succeed(Void())
                 }
