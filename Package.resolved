@@ -6,8 +6,8 @@
         "repositoryURL": "https://github.com/IBM-Swift/BlueSocket",
         "state": {
           "branch": null,
-          "revision": "26c8f4e4e3000421a0c97aaf0c7b5e9aa5475222",
-          "version": "0.12.94"
+          "revision": "ccc671b022bc60e5fffcb2aa15f499c6331bfd18",
+          "version": "1.0.46"
         }
       },
       {
@@ -21,11 +21,11 @@
       },
       {
         "package": "Shout",
-        "repositoryURL": "https://github.com/jakeheis/Shout.git",
+        "repositoryURL": "https://github.com/Einstore/Shout.git",
         "state": {
           "branch": null,
-          "revision": "b2cccccf481f141414dafd200385cf50d8adc0cd",
-          "version": "0.5.0"
+          "revision": "04fc627d6d320a5acaf1308d7a501040df7615a2",
+          "version": "0.5.1"
         }
       },
       {

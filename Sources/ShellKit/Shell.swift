@@ -18,6 +18,9 @@ public class Shell: Executor {
         /// Bad exit code error
         case badExitCode(command: String, exit: Int32, output: String)
         
+        /// Umable to convert string to `.utf8` data
+        case unableToConvertStringToData
+        
     }
     
     /// Connection type
@@ -138,6 +141,27 @@ public class Shell: Executor {
     /// - Parameter path: Path
     public func cd(path: String) -> EventLoopFuture<Void> {
         return executor.cd(path: path)
+    }
+    
+    /// Upload string as a file
+    /// - Parameter string: Path to a local file
+    /// - Parameter to: Destination path (including filename)
+    public func upload(string: String, to path: String) -> EventLoopFuture<Void> {
+        return executor.upload(file: string, to: path)
+    }
+    
+    /// Upload data as a file
+    /// - Parameter data: Path to a local file
+    /// - Parameter to: Destination path (including filename)
+    public func upload(data: Data, to path: String) -> EventLoopFuture<Void> {
+        return upload(data: data, to: path)
+    }
+    
+    /// Upload a file
+    /// - Parameter file: Path to a local file
+    /// - Parameter to: Destination path (including filename)
+    public func upload(file: String, to path: String) -> EventLoopFuture<Void> {
+        return upload(file: file, to: path)
     }
     
 }

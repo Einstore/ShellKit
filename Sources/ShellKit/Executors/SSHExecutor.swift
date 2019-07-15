@@ -87,4 +87,43 @@ public class SSHExecutor: Executor {
         return run(bash: "cd \(path.quoteEscape)").void()
     }
     
+    /// Upload string as a file
+    /// - Parameter string: Path to a local file
+    /// - Parameter to: Destination path (including filename)
+    public func upload(string: String, to path: String) -> EventLoopFuture<Void> {
+        guard let data = string.data(using: .utf8) else {
+            return eventLoop.makeFailedFuture(Shell.Error.unableToConvertStringToData)
+        }
+        return upload(data: data, to: path)
+    }
+    
+    /// Upload data as a file
+    /// - Parameter data: Path to a local file
+    /// - Parameter to: Destination path (including filename)
+    public func upload(data: Data, to path: String) -> EventLoopFuture<Void> {
+        let promise = eventLoop.makePromise(of: Void.self)
+        DispatchQueue.global(qos: .background).async {
+            do {
+                let sftp = try self.ssh.openSftp()
+                try sftp.upload(data: data, remotePath: path)
+                promise.succeed(Void())
+            } catch {
+                promise.fail(error)
+            }
+        }
+        return promise.futureResult
+    }
+    
+    /// Upload a file
+    /// - Parameter file: Path to a local file
+    /// - Parameter to: Destination path (including filename)
+    public func upload(file: String, to path: String) -> EventLoopFuture<Void> {
+        do {
+            let data = try Data(contentsOf: URL(fileURLWithPath: path))
+            return upload(data: data, to: path)
+        } catch {
+            return eventLoop.makeFailedFuture(error)
+        }
+    }
+    
 }

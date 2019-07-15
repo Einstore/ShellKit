@@ -34,4 +34,20 @@ public protocol Executor {
     /// - Parameter path: Path
     func cd(path: String) -> EventLoopFuture<Void>
     
+    
+    /// Upload a file
+    /// - Parameter file: Path to a local file
+    /// - Parameter to: Destination path (including filename)
+    func upload(file: String, to: String) -> EventLoopFuture<Void>
+    
+    /// Upload data as a file
+    /// - Parameter data: Path to a local file
+    /// - Parameter to: Destination path (including filename)
+    func upload(data: Data, to: String) -> EventLoopFuture<Void>
+    
+    /// Upload string as a file
+    /// - Parameter string: Path to a local file
+    /// - Parameter to: Destination path (including filename)
+    func upload(string: String, to: String) -> EventLoopFuture<Void>
+    
 }

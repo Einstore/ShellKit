@@ -12,7 +12,7 @@ let package = Package(
     ],
     dependencies: [
         .package(url: "https://github.com/apple/swift-nio.git", from: "2.3.0"),
-        .package(url: "https://github.com/jakeheis/Shout.git", from: "0.5.0"),
+        .package(url: "https://github.com/Einstore/Shout.git", from: "0.5.1"),
         .package(url: "https://github.com/kareman/SwiftShell.git", from: "5.0.0")
     ],
     targets: [
