@@ -133,8 +133,14 @@ public class Shell: Executor {
     
     /// Check if file exists
     /// - Parameter path: Path to the file
-    public func exists(path: String) ->EventLoopFuture<Bool> {
-        return executor.exists(path: path)
+    public func file(exists path: String) ->EventLoopFuture<Bool> {
+        return executor.file(exists: path)
+    }
+    
+    /// Check if folder exists
+    /// - Parameter path: Path to the file
+    public func folder(exists path: String) -> EventLoopFuture<Bool> {
+        return executor.folder(exists: path)
     }
     
     /// Set current working directory

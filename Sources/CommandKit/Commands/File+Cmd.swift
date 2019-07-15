@@ -29,6 +29,14 @@ extension Cmd {
         return shell.run(bash: "which \(command)").trimMap()
     }
     
+    /// Check is folder is empty
+    /// - Parameter path: Command
+    public func isEmpty(path: String) -> EventLoopFuture<Bool> {
+        return shell.run(bash: "[ '$(ls -A /path/to/directory)' ] && echo 'not empty' || echo 'empty'").map { output in
+            return output.trimmingCharacters(in: .whitespacesAndNewlines) == "empty"
+        }
+    }
+    
     /// Check is command exists
     /// - Parameter command: Command
     public func exists(command: String) -> EventLoopFuture<Bool> {
@@ -92,8 +100,14 @@ extension Cmd {
     
     /// Check if file exists
     /// - Parameter path: Path to the file
-    public func exists(path: String) ->EventLoopFuture<Bool> {
-        return shell.executor.exists(path: path)
+    public func file(exists path: String) ->EventLoopFuture<Bool> {
+        return shell.executor.file(exists: path)
+    }
+    
+    /// Check if folder exists
+    /// - Parameter path: Path to the folder
+    public func folder(exists path: String) ->EventLoopFuture<Bool> {
+        return shell.executor.folder(exists: path)
     }
     
 }

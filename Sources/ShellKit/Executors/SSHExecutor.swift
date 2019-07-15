@@ -76,17 +76,33 @@ public class SSHExecutor: Executor {
     
     /// Check if file exists
     /// - Parameter path: Path to the file
-    public func exists(path: String) -> EventLoopFuture<Bool> {
+    public func file(exists path: String) -> EventLoopFuture<Bool> {
         let command = """
         FILE=\(path)
         if [ -f "$FILE" ]; then
-            echo "$FILE exists"
+            echo "exists"
         else
-            echo "$FILE does not exist"
+            echo "does not exist"
         fi
         """
         return run(bash: command).map { result in
-            return result.contains("\(path) exists")
+            return result.trimmingCharacters(in: .whitespacesAndNewlines) == "exists"
+        }
+    }
+    
+    /// Check if folder exists
+    /// - Parameter path: Path to the file
+    public func folder(exists path: String) -> EventLoopFuture<Bool> {
+        let command = """
+        DIR=\(path)
+        if [ -d "$DIR" ]; then
+            echo "exists"
+        else
+            echo "does not exist"
+        fi
+        """
+        return run(bash: command).map { result in
+            return result.trimmingCharacters(in: .whitespacesAndNewlines) == "exists"
         }
     }
     

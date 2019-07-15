@@ -119,9 +119,18 @@ public class LocalExecutor: Executor {
     
     /// Check if file exists
     /// - Parameter path: Path to the file
-    public func exists(path: String) -> EventLoopFuture<Bool> {
-        let exists = FileManager.default.fileExists(atPath: path)
-        return eventLoop.makeSucceededFuture(exists)
+    public func file(exists path: String) -> EventLoopFuture<Bool> {
+        var dir: ObjCBool = ObjCBool(false)
+        let exists = FileManager.default.fileExists(atPath: path, isDirectory: &dir)
+        return eventLoop.makeSucceededFuture(exists && !dir.boolValue)
+    }
+    
+    /// Check if folder exists
+    /// - Parameter path: Path to the file
+    public func folder(exists path: String) -> EventLoopFuture<Bool> {
+        var dir: ObjCBool = ObjCBool(false)
+        let exists = FileManager.default.fileExists(atPath: path, isDirectory: &dir)
+        return eventLoop.makeSucceededFuture(exists && dir.boolValue)
     }
     
     /// Set current working directory

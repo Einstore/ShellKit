@@ -28,7 +28,11 @@ public protocol Executor {
     
     /// Check if file exists
     /// - Parameter path: Path to the file
-    func exists(path: String) ->EventLoopFuture<Bool>
+    func file(exists path: String) ->EventLoopFuture<Bool>
+    
+    /// Check if folder exists
+    /// - Parameter path: Path to the file
+    func folder(exists path: String) ->EventLoopFuture<Bool>
     
     /// Set current working directory
     /// - Parameter path: Path
