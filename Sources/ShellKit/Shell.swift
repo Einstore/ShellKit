@@ -154,14 +154,14 @@ public class Shell: Executor {
     /// - Parameter data: Path to a local file
     /// - Parameter to: Destination path (including filename)
     public func upload(data: Data, to path: String) -> EventLoopFuture<Void> {
-        return upload(data: data, to: path)
+        return executor.upload(data: data, to: path)
     }
     
     /// Upload a file
     /// - Parameter file: Path to a local file
     /// - Parameter to: Destination path (including filename)
     public func upload(file: String, to path: String) -> EventLoopFuture<Void> {
-        return upload(file: file, to: path)
+        return executor.upload(file: file, to: path)
     }
     
 }
