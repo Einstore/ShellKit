@@ -6,13 +6,20 @@
 //
 
 import Foundation
+import WebErrorKit
 
 
 /// Extension with commands
 public struct Cmd {
     
-    public enum Error: Swift.Error {
+    public enum CmdError: String, WebError {
+        
         case unsupportedPlatform
+        
+        public var statusCode: Int {
+            return 412
+        }
+        
     }
     
     let shell: Shell

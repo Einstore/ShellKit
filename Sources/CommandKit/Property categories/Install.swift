@@ -5,14 +5,19 @@
 //  Created by Ondrej Rafaj on 13/07/2019.
 //
 
-import Foundation
+import WebErrorKit
 
 
 /// Extension with commands
 public struct Install {
     
-    public enum Error: Swift.Error {
+    public enum InstallError: String, WebError {
         case unsupportedPlatform
+        
+        public var statusCode: Int {
+            return 412
+        }
+        
     }
     
     let shell: Shell

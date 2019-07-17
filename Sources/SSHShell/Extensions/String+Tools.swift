@@ -1,6 +1,6 @@
 //
 //  String+Tools.swift
-//  
+//
 //
 //  Created by Ondrej Rafaj on 08/07/2019.
 //

@@ -5,23 +5,12 @@
 //  Created by Ondrej Rafaj on 04/07/2019.
 //
 
-import Foundation
+import ExecutorKit
 import NIO
 
 
 /// Main executor
 public class Shell: Executor {
-    
-    /// Basic error
-    public enum Error: Swift.Error {
-        
-        /// Bad exit code error
-        case badExitCode(command: String, exit: Int32, output: String)
-        
-        /// Umable to convert string to `.utf8` data
-        case unableToConvertStringToData
-        
-    }
     
     /// Connection type
     public struct Connection {
@@ -96,7 +85,7 @@ public class Shell: Executor {
         self.eventLoop = eventLoop
         switch connection.storage {
         case .local(dir: let dir):
-            executor = try LocalExecutor(workDir: dir, on: eventLoop)
+            executor = LocalExecutor(currentDirectoryPath: dir, on: eventLoop)
         case .ssh(host: let host, port: let port, dir: let dir, username: let user, auth: let auth):
             executor = try SSHExecutor(workDir: dir, host: host, port: port, username: user, auth: auth, on: eventLoop)
         }
@@ -105,7 +94,7 @@ public class Shell: Executor {
     /// Run bash command
     /// - Parameter command: bash command
     /// - Parameter output: Future containing an exit code
-    public func run(bash command: String, output: ((String) -> ())? = nil) -> EventLoopFuture<String> {
+    public func run(bash command: String, output: ((String) -> ())? = nil) -> ProcessFuture<String> {
         if outputCommands {
             output?("$ \(command)\n")
             self.output?(command + "\n")
@@ -120,7 +109,7 @@ public class Shell: Executor {
     /// - Parameter command: Command
     /// - Parameter args: Arguments
     /// - Parameter output: Closure to output console text
-    public func run(command: String, args: [String], output: ((String) -> ())? = nil) -> EventLoopFuture<String> {
+    public func run(command: String, args: [String], output: ((String) -> ())? = nil) -> ProcessFuture<String> {
         if outputCommands {
             output?("$ \(command) \(args.joined(separator: " "))\n")
             self.output?(command + "\n")

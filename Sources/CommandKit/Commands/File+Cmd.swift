@@ -13,7 +13,7 @@ extension Cmd {
     
     /// Return current path
     public func pwd() -> EventLoopFuture<String> {
-        return shell.run(bash: "pwd").trimMap()
+        return shell.run(bash: "pwd").future.trimMap()
     }
     
     /// Set current working directory
@@ -26,13 +26,13 @@ extension Cmd {
     /// Return a command path if exists
     /// - Parameter command: Command
     public func which(_ command: String) -> EventLoopFuture<String> {
-        return shell.run(bash: "which \(command)").trimMap()
+        return shell.run(bash: "which \(command)").future.trimMap()
     }
     
     /// Check is folder is empty
     /// - Parameter path: Command
     public func isEmpty(path: String) -> EventLoopFuture<Bool> {
-        return shell.run(bash: "[ '$(ls -A /path/to/directory)' ] && echo 'not empty' || echo 'empty'").map { output in
+        return shell.run(bash: "[ '$(ls -A /path/to/directory)' ] && echo 'not empty' || echo 'empty'").future.map { output in
             return output.trimmingCharacters(in: .whitespacesAndNewlines) == "empty"
         }
     }
@@ -46,7 +46,7 @@ extension Cmd {
     /// Return content of a file as a string
     /// - Parameter path: Path to file
     public func cat(path: String) -> EventLoopFuture<String> {
-        return shell.run(bash: "cat \(path.quoteEscape)")
+        return shell.run(bash: "cat \(path.quoteEscape)").future
     }
     
     /// List files in a path
@@ -55,7 +55,7 @@ extension Cmd {
     /// - Parameter output: Future
     public func ls(path: String, flags: FlagsConvertible? = nil, output: ((String) -> ())? = nil) -> EventLoopFuture<String> {
         let flags = flags?.flags ?? ""
-        return shell.run(bash: "ls \(flags) \(path.quoteEscape)", output: output)
+        return shell.run(bash: "ls \(flags) \(path.quoteEscape)", output: output).future
     }
     
     /// Remove flags
@@ -75,7 +75,7 @@ extension Cmd {
     /// - Parameter output: Future
     public func rm(path: String, flags: FlagsConvertible? = nil, output: ((String) -> ())? = nil) -> EventLoopFuture<String> {
         let flags = flags?.flags ?? ""
-        return shell.run(bash: "rm \(flags) \(path.quoteEscape)", output: output)
+        return shell.run(bash: "rm \(flags) \(path.quoteEscape)", output: output).future
     }
     
     /// Make dir flags
@@ -93,9 +93,10 @@ extension Cmd {
     /// - Parameter path: Path
     /// - Parameter flags: Flags (-p is default)
     /// - Parameter output: Future
-    public func mkdir(path: String, flags: FlagsConvertible? = [MkDir.p], output: ((String) -> ())? = nil) -> EventLoopFuture<Shell.Output> {
+    public func mkdir(path: String, flags: FlagsConvertible? = [MkDir.p], output: ((String) -> ())? = nil) -> EventLoopFuture<String> {
         let flags = flags?.flags ?? ""
-        return shell.run(bash: "mkdir \(flags) \(path.quoteEscape)", output: output)
+        #warning("There is a bug in FlagsConvertible ... something with the .description cycling")
+        return shell.run(bash: "mkdir \(flags) \(path.quoteEscape)", output: output).future
     }
     
     /// Check if file exists

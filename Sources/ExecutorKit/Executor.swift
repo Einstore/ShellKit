@@ -12,19 +12,17 @@ import NIO
 /// Executor protocol
 public protocol Executor {
     
-    typealias Output = String
-    
     /// Run bash command
     /// - Parameter bash: bash command
     /// - Parameter output: Closure to output console text
-    func run(bash: String, output: ((String) -> ())?) -> EventLoopFuture<Output>
+    func run(bash: String, output: ((String) -> ())?) -> ProcessFuture<String>
     
     
     /// Run command
     /// - Parameter command: Command
     /// - Parameter args: Arguments
     /// - Parameter output: Closure to output console text
-    func run(command: String, args: [String], output: ((String) -> ())?) -> EventLoopFuture<Output>
+    func run(command: String, args: [String], output: ((String) -> ())?) -> ProcessFuture<String>
     
     /// Check if file exists
     /// - Parameter path: Path to the file

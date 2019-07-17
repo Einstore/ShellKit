@@ -38,12 +38,12 @@
         }
       },
       {
-        "package": "SwiftShell",
-        "repositoryURL": "https://github.com/kareman/SwiftShell.git",
+        "package": "WebError",
+        "repositoryURL": "https://github.com/Einstore/WebErrorKit.git",
         "state": {
           "branch": null,
-          "revision": "2614f86520e66e19328f11b00dabd474209e82f7",
-          "version": "5.0.0"
+          "revision": "183170b95c46ca5a900d0ea870980c9c280a573a",
+          "version": "0.0.1"
         }
       }
     ]

@@ -5,7 +5,7 @@
 //  Created by Ondrej Rafaj on 04/07/2019.
 //
 
-import Foundation
+import ExecutorKit
 import Shout
 import NIO
 
@@ -36,8 +36,8 @@ public class SSHExecutor: Executor {
     /// Run bash command
     /// - Parameter bash: bash command
     /// - Parameter output: Future containing an exit code
-    public func run(bash: String, output: ((String) -> ())? = nil) -> EventLoopFuture<Output> {
-        let promise = eventLoop.makePromise(of: Output.self)
+    public func run(bash: String, output: ((String) -> ())? = nil) -> ProcessFuture<String> {
+        let promise = eventLoop.makePromise(of: String.self)
         DispatchQueue.global(qos: .background).async {
             do {
                 var outputText = ""
@@ -53,7 +53,17 @@ public class SSHExecutor: Executor {
                     }
                 } else {
                     self.eventLoop.execute {
-                        promise.fail(Shell.Error.badExitCode(command: bash, exit: res, output: outputText))
+                        #warning("Replace `.exit` with a real termination reason!!!")
+                        promise.fail(
+                            ShellError.badExitCode(
+                                command: bash,
+                                exit: Exit(
+                                    terminationStatus: res,
+                                    terminationReason: .exit
+                                ),
+                                output: outputText
+                            )
+                        )
                     }
                 }
             } catch {
@@ -62,14 +72,16 @@ public class SSHExecutor: Executor {
                 }
             }
         }
-        return promise.futureResult
+        return ProcessFuture(future: promise.futureResult) {
+            #warning("Terminate process!!!!!")
+        }
     }
     
     /// Run command
     /// - Parameter command: Command
     /// - Parameter args: Arguments
     /// - Parameter output: Closure to output console text
-    public func run(command: String, args: [String], output: ((String) -> ())? = nil) -> EventLoopFuture<String> {
+    public func run(command: String, args: [String], output: ((String) -> ())? = nil) -> ProcessFuture<String> {
         let cmd = command + ((args.count > 0) ? (" " + args.joined(separator: " ")) : "")
         return run(bash: cmd, output: output)
     }
@@ -85,7 +97,7 @@ public class SSHExecutor: Executor {
             echo "does not exist"
         fi
         """
-        return run(bash: command).map { result in
+        return run(bash: command).future.map { result in
             return result.trimmingCharacters(in: .whitespacesAndNewlines) == "exists"
         }
     }
@@ -101,7 +113,7 @@ public class SSHExecutor: Executor {
             echo "does not exist"
         fi
         """
-        return run(bash: command).map { result in
+        return run(bash: command).future.map { result in
             return result.trimmingCharacters(in: .whitespacesAndNewlines) == "exists"
         }
     }
@@ -109,7 +121,7 @@ public class SSHExecutor: Executor {
     /// Set current working directory
     /// - Parameter path: Path
     public func cd(path: String) -> EventLoopFuture<Void> {
-        return run(bash: "cd \(path.quoteEscape)").void()
+        return run(bash: "cd \(path.quoteEscape)").future.map { _ in Void() }
     }
     
     /// Upload string as a file
@@ -117,7 +129,7 @@ public class SSHExecutor: Executor {
     /// - Parameter to: Destination path (including filename)
     public func upload(string: String, to path: String) -> EventLoopFuture<Void> {
         guard let data = string.data(using: .utf8) else {
-            return eventLoop.makeFailedFuture(Shell.Error.unableToConvertStringToData)
+            return eventLoop.makeFailedFuture(ShellError.unableToConvertStringToData)
         }
         return upload(data: data, to: path)
     }
