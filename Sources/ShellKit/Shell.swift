@@ -81,7 +81,7 @@ public class Shell: Executor {
     /// Initializer
     /// - Parameter connection: Connection details
     /// - Parameter eventLoop: Event loop
-    public init(_ connection: Connection, on eventLoop: EventLoop) throws {
+    public init(_ connection: Connection, on eventLoop: EventLoop = EmbeddedEventLoop()) throws {
         self.eventLoop = eventLoop
         switch connection.storage {
         case .local(dir: let dir):
