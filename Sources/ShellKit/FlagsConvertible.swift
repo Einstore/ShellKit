@@ -1,10 +1,3 @@
-//
-//  FlagsConvertible.swift
-//  
-//
-//  Created by Ondrej Rafaj on 08/07/2019.
-//
-
 import Foundation
 
 

@@ -1,10 +1,3 @@
-//
-//  Exports.swift
-//  
-//
-//  Created by Ondrej Rafaj on 17/07/2019.
-//
-
 @_exported import Foundation
 @_exported import protocol NIO.EventLoop
 @_exported import class NIO.EventLoopFuture

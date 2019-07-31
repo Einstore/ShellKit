@@ -1,10 +1,3 @@
-//
-//  EventLoopFuture+Async.swift
-//  
-//
-//  Created by Ondrej Rafaj on 13/07/2019.
-//
-
 import Foundation
 import NIO
 
@@ -24,7 +17,9 @@ extension EventLoopFuture {
 extension EventLoopFuture where Value == String {
     
     func trimMap() -> EventLoopFuture<String> {
-        return map { $0.trimmingCharacters(in: .whitespacesAndNewlines) }
+        return map {
+            return $0.trimmingCharacters(in: .whitespacesAndNewlines)
+        }
     }
     
 }

@@ -1,10 +1,3 @@
-//
-//  File.swift
-//  
-//
-//  Created by Ondrej Rafaj on 17/07/2019.
-//
-
 import XCTest
 import LocalShell
 import NIO

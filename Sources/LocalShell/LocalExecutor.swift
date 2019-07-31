@@ -1,10 +1,3 @@
-//
-//  LocalExecutor.swift
-//  
-//
-//  Created by Ondrej Rafaj on 16/07/2019.
-//
-
 import Foundation
 import ExecutorKit
 import NIO
@@ -62,8 +55,19 @@ public class LocalExecutor: Executor {
         var arguments = [command]
         arguments.append(contentsOf: args)
         p.arguments = arguments
+        
+        var environment =  ProcessInfo.processInfo.environment
+        if var path = environment["PATH"] {
+            if !path.contains("/usr/local/bin") {
+                path.append(":/usr/local/bin")
+                environment["PATH"] = path
+            }
+        } else {
+            environment["PATH"] = "/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin"
+        }
+        p.environment = environment
+        
         p.standardOutput = pipe.fileHandleForWriting
-        p.launch()
         
         let queue = DispatchQueue(label: self.identifier)
         let channel = DispatchIO(
@@ -86,13 +90,15 @@ public class LocalExecutor: Executor {
                 return
             }
             if let text = data.map({ String(decoding: $0, as: Unicode.UTF8.self) }), !text.isEmpty {
-                output?(text)
                 outputText.append(text)
+                output?(text)
                 print(text, terminator: "")
             }
         }
         p.terminationHandler = { p in
             if p.terminationStatus == 0 {
+                print("I am here!!!!")
+                
                 promise.succeed(outputText)
             } else {
                 let cmd = arguments.joined(separator: " ")
@@ -108,6 +114,9 @@ public class LocalExecutor: Executor {
                 )
             }
         }
+        
+        p.launch()
+        
         return ProcessFuture(future: promise.futureResult) {
             p.terminate()
         }

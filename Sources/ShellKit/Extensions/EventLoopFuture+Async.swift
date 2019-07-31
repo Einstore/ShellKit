@@ -1,10 +1,3 @@
-//
-//  EventLoopFuture+Async.swift
-//  
-//
-//  Created by Ondrej Rafaj on 13/07/2019.
-//
-
 import Foundation
 import NIO
 

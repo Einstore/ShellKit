@@ -60,8 +60,13 @@ let package = Package(
                 "LocalShell",
                 "NIO"
             ]
+        ),
+        .testTarget(
+            name: "CommandKitTests",
+            dependencies: [
+                "CommandKit",
+                "NIO"
+            ]
         )
     ]
 )
-
-
