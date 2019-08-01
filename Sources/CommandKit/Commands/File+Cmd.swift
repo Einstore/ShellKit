@@ -4,9 +4,15 @@ import NIO
 
 extension Cmd {
     
-    /// Return current path
-    public func pwd() -> EventLoopFuture<String> {
-        return shell.run(bash: "pwd").future.trimMap()
+    
+    /// Return current or full path of a relative one
+    /// - Parameter relativePath: Relative path to be converted into full
+    public func pwd(relativePath path: String? = nil) -> EventLoopFuture<String> {
+        if let path = path {
+            return shell.run(bash: "TMP_P=$(pwd) && cd \(path.quoteEscape) && pwd && cd \"$TMP_P\"").future.trimMap()
+        } else {
+            return shell.run(bash: "pwd").future.trimMap()
+        }
     }
     
     /// Set current working directory

@@ -13,6 +13,19 @@ class Tests: XCTestCase {
         shell = try! Shell(.local)
     }
     
+    func testPWD() {
+        try! shell.cd(path: "/tmp").wait()
+        let origPath = try! shell.cmd.pwd().wait()
+        XCTAssertEqual(origPath, "/tmp")
+        
+        var out = try! shell.cmd.pwd(relativePath: "~/.ssh").wait()
+        XCTAssertTrue(out.contains("/.ssh"))
+        XCTAssertTrue(!out.contains("~"))
+        
+        out = try! shell.cmd.pwd().wait()
+        XCTAssertEqual(out, origPath)
+    }
+    
     func testLocalCommand() {
         var out = try! shell.cmd.which("ls").wait()
         XCTAssertEqual(out, "/bin/ls")
