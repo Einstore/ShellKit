@@ -15,6 +15,12 @@ extension Cmd {
         }
     }
     
+    
+    /// Return full home path
+    public func home() -> EventLoopFuture<String> {
+        return pwd(relativePath: "~")
+    }
+    
     /// Set current working directory
     /// - Parameter path: Path
     ///    - Note: Convenience method for `shell.cd(path: String)`
