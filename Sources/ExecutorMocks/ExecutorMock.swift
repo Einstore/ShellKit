@@ -4,10 +4,14 @@ import ExecutorKit
 
 public class ExecutorMock: Executor {
     
-    public let eventLoop = EmbeddedEventLoop()
+    /// Event loop on which all commands execute
+    public var eventLoop = EmbeddedEventLoop()
     
+    /// Responses registered for commands
+    ///     - Note: Format is [Command: [Output piece]]
     public var responses: [String: [String]] = [:]
     
+    /// Errors for responses that are supposed to fail
     public var failingResponses: [String: Error] = [:]
     
     public func run(bash: String, output: ((String) -> ())?) -> ProcessFuture<String> {
@@ -37,6 +41,7 @@ public class ExecutorMock: Executor {
         return run(bash: cmd, output: output)
     }
     
+    /// Existing paths
     public var existingPaths: [String] = []
     
     public func file(exists path: String) -> EventLoopFuture<Bool> {
@@ -50,6 +55,7 @@ public class ExecutorMock: Executor {
         return file(exists: path)
     }
     
+    /// Current path
     public var currentPath = ""
     
     public func cd(path: String) -> EventLoopFuture<Void> {
@@ -67,6 +73,7 @@ public class ExecutorMock: Executor {
         return eventLoop.makeSucceededFuture(Void())
     }
     
+    /// Uploaded files and data
     public var uploaded: [String: Data] = [:]
     
     public func upload(string: String, to path: String) -> EventLoopFuture<Void> {
