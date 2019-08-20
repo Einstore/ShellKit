@@ -6,8 +6,8 @@
         "repositoryURL": "https://github.com/IBM-Swift/BlueSocket",
         "state": {
           "branch": null,
-          "revision": "af50c0e67a9fe9050322b93b0cb9044abfc4feaa",
-          "version": "1.0.47"
+          "revision": "3cf5de510650d67c551c9e1884fbc9d6e744206b",
+          "version": "1.0.48"
         }
       },
       {
@@ -33,8 +33,8 @@
         "repositoryURL": "https://github.com/apple/swift-nio.git",
         "state": {
           "branch": null,
-          "revision": "6a79d4687ede7c088fe3e31d9b3452d6e6cd91eb",
-          "version": "2.5.1"
+          "revision": "790827800d6af12ca6a8b1dca7a9072606fd2a1e",
+          "version": "2.7.0"
         }
       },
       {

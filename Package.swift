@@ -7,7 +7,8 @@ let package = Package(
         .library(name: "ShellKit", targets: ["ShellKit"]),
         .library(name: "SSHShell", targets: ["SSHShell"]),
         .library(name: "LocalShell", targets: ["LocalShell"]),
-        .library(name: "CommandKit", targets: ["CommandKit"])
+        .library(name: "CommandKit", targets: ["CommandKit"]),
+        .library(name: "ExecutorMocks", targets: ["ExecutorMocks"])
     ],
     dependencies: [
         .package(url: "https://github.com/apple/swift-nio.git", from: "2.3.0"),
@@ -52,6 +53,12 @@ let package = Package(
             dependencies: [
                 "ShellKit",
                 "WebErrorKit"
+            ]
+        ),
+        .target(
+            name: "ExecutorMocks",
+            dependencies: [
+                "ExecutorKit"
             ]
         ),
         .testTarget(
