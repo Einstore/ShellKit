@@ -50,3 +50,16 @@ public protocol Executor {
     func upload(string: String, to: String) -> EventLoopFuture<Void>
     
 }
+
+
+extension Executor {
+    
+    func run(bash: String) -> ProcessFuture<String> {
+        return run(bash: bash, output: nil)
+    }
+    
+    func run(command: String, args: [String]) -> ProcessFuture<String> {
+        return run(command: command, args: args, output: nil)
+    }
+    
+}

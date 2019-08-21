@@ -11,7 +11,7 @@ class Tests: XCTestCase {
     override func setUp() {
         super.setUp()
         
-        shell = try! ExecutorMock()
+        shell = ExecutorMock()
     }
     
     func testBasicMock() {
