@@ -3,7 +3,7 @@ import NIO
 
 
 /// Main executor
-public class Shell: Executor {
+public class Shell: MasterExecutor {
     
     /// Connection type
     public struct Connection {

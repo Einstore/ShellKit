@@ -1,4 +1,5 @@
 import WebErrorKit
+import ExecutorKit
 
 
 /// Extension with commands
@@ -13,9 +14,9 @@ public struct Install {
         
     }
     
-    let shell: Shell
+    let shell: MasterExecutor
     
-    init(_ shell: Shell) {
+    init(_ shell: MasterExecutor) {
         self.shell = shell
     }
     

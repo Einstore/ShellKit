@@ -6,7 +6,9 @@ import NIO
 /// SSH executor
 public class SSHExecutor: Executor {
     
-    let eventLoop: EventLoop
+    public var output: ((String) -> ())?
+    
+    public let eventLoop: EventLoop
     let ssh: SSH
     var sftp: SFTP?
     
@@ -38,6 +40,7 @@ public class SSHExecutor: Executor {
                     outputText += text
                     self.eventLoop.execute {
                         output?(text)
+                        self.output?(text)
                     }
                 }
                 if res == 0 {

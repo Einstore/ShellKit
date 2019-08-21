@@ -5,6 +5,10 @@ import NIO
 /// Executor protocol
 public protocol Executor {
     
+    var output: ((String) -> ())? { get set }
+    
+    var eventLoop: EventLoop { get }
+    
     /// Run bash command
     /// - Parameter bash: bash command
     /// - Parameter output: Closure to output console text

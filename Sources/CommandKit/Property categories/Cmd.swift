@@ -1,4 +1,5 @@
 import Foundation
+import ExecutorKit
 import WebErrorKit
 
 
@@ -15,16 +16,16 @@ public struct Cmd {
         
     }
     
-    let shell: Shell
+    let shell: MasterExecutor
     
-    init(_ shell: Shell) {
+    init(_ shell: MasterExecutor) {
         self.shell = shell
     }
     
 }
 
 
-extension Shell {
+extension MasterExecutor {
     
     public var cmd: Cmd {
         return Cmd(self)

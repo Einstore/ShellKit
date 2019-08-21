@@ -49,7 +49,7 @@ extension Cmd {
     
     /// Get target platform
     public func platform() -> EventLoopFuture<String> {
-        return shell.run(bash: Os.command).future.trimMap()
+        return shell.run(bash: Os.command, output: nil).future.trimMap()
     }
     
 }

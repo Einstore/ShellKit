@@ -9,9 +9,9 @@ extension Cmd {
     /// - Parameter relativePath: Relative path to be converted into full
     public func pwd(relativePath path: String? = nil) -> EventLoopFuture<String> {
         if let path = path {
-            return shell.run(bash: "TMP_P=$(pwd) && cd \(path.quoteEscape) && pwd && cd \"$TMP_P\"").future.trimMap()
+            return shell.run(bash: "TMP_P=$(pwd) && cd \(path.quoteEscape) && pwd && cd \"$TMP_P\"", output: nil).future.trimMap()
         } else {
-            return shell.run(bash: "pwd").future.trimMap()
+            return shell.run(bash: "pwd", output: nil).future.trimMap()
         }
     }
     
@@ -31,13 +31,13 @@ extension Cmd {
     /// Return a command path if exists
     /// - Parameter command: Command
     public func which(_ command: String) -> EventLoopFuture<String> {
-        return shell.run(bash: "which \(command)").future.trimMap()
+        return shell.run(bash: "which \(command)", output: nil).future.trimMap()
     }
     
     /// Check is folder is empty
     /// - Parameter path: Command
     public func isEmpty(path: String) -> EventLoopFuture<Bool> {
-        return shell.run(bash: "[ '$(ls -A /path/to/directory)' ] && echo 'not empty' || echo 'empty'").future.map { output in
+        return shell.run(bash: "[ '$(ls -A /path/to/directory)' ] && echo 'not empty' || echo 'empty'", output: nil).future.map { output in
             return output.trimmingCharacters(in: .whitespacesAndNewlines) == "empty"
         }
     }
@@ -51,7 +51,7 @@ extension Cmd {
     /// Return content of a file as a string
     /// - Parameter path: Path to file
     public func cat(path: String) -> EventLoopFuture<String> {
-        return shell.run(bash: "cat \(path.quoteEscape)").future
+        return shell.run(bash: "cat \(path.quoteEscape)", output: nil).future
     }
     
     /// List files in a path
@@ -59,8 +59,11 @@ extension Cmd {
     /// - Parameter flags: Flags
     /// - Parameter output: Future
     public func ls(path: String, flags: FlagsConvertible? = nil, output: ((String) -> ())? = nil) -> EventLoopFuture<String> {
-        let flags = flags?.flags ?? ""
-        return shell.run(bash: "ls \(flags) \(path.quoteEscape)", output: output).future
+        var flags = flags?.flags ?? ""
+        if !flags.isEmpty {
+            flags.append(contentsOf: " ")
+        }
+        return shell.run(bash: "ls \(flags)\(path.quoteEscape)", output: output).future
     }
     
     /// Remove flags

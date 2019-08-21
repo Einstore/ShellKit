@@ -6,7 +6,7 @@ extension Install {
     /// Install HomeBrew
     ///     - Note: macOS only
     public func brew() -> EventLoopFuture<Void> {
-        return shell.run(bash: "/usr/bin/ruby -e \"$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)\"").future.void()
+        return shell.run(bash: "/usr/bin/ruby -e \"$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)\"", output: nil).future.void()
     }
     
     /// Install cURL
@@ -27,9 +27,9 @@ extension Install {
         return shell.cmd.os().flatMap { os in
             switch os {
             case .macOs:
-                return self.shell.run(bash: "brew install \(name)").future.void()
+                return self.shell.run(bash: "brew install \(name)", output: nil).future.void()
             case .linux:
-                return self.shell.run(bash: "sudo apt-get install \(name)").future.void()
+                return self.shell.run(bash: "sudo apt-get install \(name)", output: nil).future.void()
             default:
                 return self.shell.eventLoop.makeFailedFuture(Cmd.CmdError.unsupportedPlatform)
             }
@@ -42,7 +42,7 @@ extension Install {
         return shell.cmd.os().flatMap { os in
             switch os {
             case .macOs:
-                return self.shell.run(bash: "brew install einstore/homebrew-tap/systemator").future.void()
+                return self.shell.run(bash: "brew install einstore/homebrew-tap/systemator", output: nil).future.void()
             default:
                 return self.shell.eventLoop.makeFailedFuture(Cmd.CmdError.unsupportedPlatform)
             }

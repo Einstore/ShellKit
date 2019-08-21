@@ -69,6 +69,13 @@ let package = Package(
             ]
         ),
         .testTarget(
+            name: "ExecutorMocksTests",
+            dependencies: [
+                "ExecutorMocks",
+                "CommandKit"
+            ]
+        ),
+        .testTarget(
             name: "CommandKitTests",
             dependencies: [
                 "CommandKit",

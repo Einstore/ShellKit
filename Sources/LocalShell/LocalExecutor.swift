@@ -5,6 +5,8 @@ import NIO
 
 public class LocalExecutor: Executor {
     
+    public var output: ((String) -> ())? = nil
+    
     public enum LocalExecutorError: SerializableWebError {
         
         case processFailed(exit: Int32)
@@ -22,7 +24,7 @@ public class LocalExecutor: Executor {
         
     }
     
-    let eventLoop: EventLoop
+    public let eventLoop: EventLoop
     public private(set) var currentDirectoryPath: String
     let identifier: String = UUID().uuidString
     
@@ -92,6 +94,7 @@ public class LocalExecutor: Executor {
             if let text = data.map({ String(decoding: $0, as: Unicode.UTF8.self) }), !text.isEmpty {
                 outputText.append(text)
                 output?(text)
+                self.output?(text)
                 print(text, terminator: "")
             }
         }

@@ -1,22 +1,29 @@
 import Foundation
 import ExecutorKit
+import ShellKit
 
 
-public class ExecutorMock: Executor {
+public class ExecutorMock: MasterExecutor {
+    
+    public var executor: Executor {
+        return self
+    }
+    
+    public var output: ((String) -> ())? = nil
     
     /// Event loop on which all commands execute
-    public var eventLoop = EmbeddedEventLoop()
+    public var eventLoop: EventLoop = EmbeddedEventLoop()
     
-    /// Responses registered for commands
+    /// Commads registered for commands
     ///     - Note: Format is [Command: [Output piece]]
-    public var responses: [String: [String]] = [:]
+    public var mockResults: [String: [String]] = [:]
     
-    /// Errors for responses that are supposed to fail
-    public var failingResponses: [String: Error] = [:]
+    /// Errors for results that are supposed to fail
+    public var failingMockResults: [String: Error] = [:]
     
     public func run(bash: String, output: ((String) -> ())?) -> ProcessFuture<String> {
-        guard let response = responses[bash] else {
-            guard let error = failingResponses[bash] else {
+        guard let response = mockResults[bash] else {
+            guard let error = failingMockResults[bash] else {
                 fatalError("[ShellKit] Missing mock response for:\n\(bash)\n\n")
             }
             let f: EventLoopFuture<String> = eventLoop.makeFailedFuture(error)
@@ -79,6 +86,8 @@ public class ExecutorMock: Executor {
     public func upload(string: String, to path: String) -> EventLoopFuture<Void> {
         return upload(data: string.data(using: .utf8)!, to: path)
     }
+    
+    public init() { }
     
 }
 
