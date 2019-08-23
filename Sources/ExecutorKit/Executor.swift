@@ -14,7 +14,6 @@ public protocol Executor {
     /// - Parameter output: Closure to output console text
     func run(bash: String, output: ((String) -> ())?) -> ProcessFuture<String>
     
-    
     /// Run command
     /// - Parameter command: Command
     /// - Parameter args: Arguments
@@ -32,7 +31,6 @@ public protocol Executor {
     /// Set current working directory
     /// - Parameter path: Path
     func cd(path: String) -> EventLoopFuture<Void>
-    
     
     /// Upload a file
     /// - Parameter file: Path to a local file
